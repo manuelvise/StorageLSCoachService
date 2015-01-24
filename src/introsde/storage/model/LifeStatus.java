@@ -155,7 +155,7 @@ public class LifeStatus implements Serializable {
 	
 	
 	
-	public static LifeStatus getLifeStyleOfPersonForMeasure(int idPerson,
+	public static LifeStatus getLifeStyleOfPersonForMeasure(Long idPerson,
 			MeasureDefinition type) {
 
 		Person person = Person.getPersonById(idPerson);

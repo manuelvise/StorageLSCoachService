@@ -15,11 +15,11 @@ import javax.jws.WebService;
 //Service Implementation
 
 @WebService(endpointInterface = "introsde.storage.ws.People",
-	serviceName="PeopleService")
+	serviceName="PeopleStorageService")
 public class PeopleImpl implements People {
 
 	@Override
-	public Person readPerson(int id) {
+	public Person readPerson(Long id) {
 		System.out.println("---> Reading Person by id = "+id);
 		Person p = Person.getPersonById(id);
 		if (p!=null) {
@@ -36,19 +36,19 @@ public class PeopleImpl implements People {
 	}
 
 	@Override
-	public int addPerson(Person person) {
+	public Long addPerson(Person person) {
 		Person.savePerson(person);
 		return person.getIdPerson();
 	}
 
 	@Override
-	public int updatePerson(Person person) {
+	public Long updatePerson(Person person) {
 		Person.updatePerson(person);
 		return person.getIdPerson();
 	}
 
 	@Override
-	public int deletePerson(int id) {
+	public int deletePerson(Long id) {
 		Person p = Person.getPersonById(id);
 		if (p!=null) {
 			Person.removePerson(p);
@@ -59,7 +59,7 @@ public class PeopleImpl implements People {
 	}
 
 	@Override
-	public int updatePersonHP(int id, LifeStatus hp) {
+	public int updatePersonHP(Long id, LifeStatus hp) {
 		LifeStatus ls = LifeStatus.getLifeStatusById(hp.getIdMeasure());
 		if (ls.getPerson().getIdPerson() == id) {
 			LifeStatus.updateLifeStatus(hp);
@@ -70,8 +70,8 @@ public class PeopleImpl implements People {
 	}
 	
 	@Override
-	public List<HealthMeasureHistory> readPersonHistory(int id, String measureType){
-		
+	public List<HealthMeasureHistory> readPersonHistory(Long id, String measureType){
+				
 		List<HealthMeasureHistory> historyForMeasure = HealthMeasureHistory.getLifeStyleOfPersonForMeasure(id, measureType);
 		
 		return historyForMeasure;
@@ -79,7 +79,7 @@ public class PeopleImpl implements People {
 	}
 	
 	@Override
-	public HealthMeasureHistory readPersonMeasurement(int id, String measureType,
+	public HealthMeasureHistory readPersonMeasurement(Long id, String measureType,
 			int mid) {
 		// TODO Auto-generated method stub
 		HealthMeasureHistory measure = HealthMeasureHistory.getLifeStyleOfPersonForIdM(id, measureType, mid);
@@ -88,7 +88,7 @@ public class PeopleImpl implements People {
 	}
 	
 	@Override
-	public LifeStatus savePersonMeasurement(int idPerson, Measure m) {
+	public LifeStatus savePersonMeasurement(Long idPerson, Measure m) {
 		LifeStatus lifeStatusMeasureSaved = null;
 
 		LifeStatus lf = new LifeStatus();
@@ -135,7 +135,7 @@ public class PeopleImpl implements People {
 	}
 	
 	@Override
-	public List<HealthMeasureHistory> readPersonMeasureByDates(int id,
+	public List<HealthMeasureHistory> readPersonMeasureByDates(Long id,
 			String measureType, Long before, Long after) {
 		
 		List<HealthMeasureHistory> listMeasures = HealthMeasureHistory.getHistoryMeasuresFromToOfTypeForPerson(id, measureType,before,after);
@@ -152,6 +152,17 @@ public class PeopleImpl implements People {
 		
 		return listMeasures;
 		
+	}
+
+	@Override
+	public MeasureDefinition getCompleteMeasureTypeFromName(String typeMeasure) {
+		return MeasureDefinition.getTypeMeasureFromName(typeMeasure);
+	}
+
+	@Override
+	public MeasureDefinition saveMeasureDefinition(
+			MeasureDefinition measureDefinition) {
+		return MeasureDefinition.saveMeasureDefinition(measureDefinition);
 	}
 	
 	

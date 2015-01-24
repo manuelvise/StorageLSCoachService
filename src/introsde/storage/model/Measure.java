@@ -5,6 +5,7 @@ import introsde.storage.model.MeasureDefinition;
 public class Measure {
 	private String value;
 	private MeasureDefinition measureDefinition;
+	private Long timestamp;
 
 	public String getValue() {
 		return value;
@@ -20,6 +21,14 @@ public class Measure {
 
 	public void setMeasureDefinition(MeasureDefinition measureDefinition) {
 		this.measureDefinition = measureDefinition;
+	}
+
+	public Long getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Long timestamp) {
+		this.timestamp = timestamp;
 	}
 
 }

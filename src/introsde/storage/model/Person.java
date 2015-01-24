@@ -34,7 +34,7 @@ public class Person implements Serializable {
 	@Id
 	@GeneratedValue
 	@Column(name="idPerson")
-	private int idPerson;
+	private Long idPerson;
 
 	@Column(name="lastname")
 	private String lastname;
@@ -75,11 +75,11 @@ public class Person implements Serializable {
 		this.email = email;
 	}
 
-	public int getIdPerson() {
+	public Long getIdPerson() {
 		return this.idPerson;
 	}
 
-	public void setIdPerson(int idPerson) {
+	public void setIdPerson(Long idPerson) {
 		this.idPerson = idPerson;
 	}
 
@@ -122,7 +122,7 @@ public class Person implements Serializable {
 	// Database operations
 	// Notice that, for this example, we create and destroy and entityManager on each operation. 
 	// How would you change the DAO to not having to create the entity manager every time? 
-	public static Person getPersonById(int personId) {
+	public static Person getPersonById(Long personId) {
 		EntityManager em = LifeCoachDao.instance.createEntityManager();
 		Person p = em.find(Person.class, personId);
 		LifeCoachDao.instance.closeConnections(em);

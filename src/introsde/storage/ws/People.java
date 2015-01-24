@@ -20,7 +20,7 @@ import javax.jws.soap.SOAPBinding.Use;
 public interface People {
     @WebMethod(operationName="readPerson")
     @WebResult(name="person") 
-    public Person readPerson(@WebParam(name="personId") int id);
+    public Person readPerson(@WebParam(name="personId") Long id);
  
     @WebMethod(operationName="getPersonList")
     @WebResult(name="people") 
@@ -28,44 +28,51 @@ public interface People {
  
     @WebMethod(operationName="createPerson")
     @WebResult(name="personId") 
-    public int addPerson(@WebParam(name="person") Person person);
+    public Long addPerson(@WebParam(name="person") Person person);
  
     @WebMethod(operationName="updatePerson")
     @WebResult(name="personId") 
-    public int updatePerson(@WebParam(name="person") Person person);
+    public Long updatePerson(@WebParam(name="person") Person person);
     
     @WebMethod(operationName="deletePerson")
-    @WebResult(name="personDeleted") 
-    public int deletePerson(@WebParam(name="personId") int id);
+    @WebResult(name="ValueResult") 
+    public int deletePerson(@WebParam(name="personId") Long id);
     
     @WebMethod(operationName="updatePersonHealthProfile")
     @WebResult(name="hpId") 
-    public int updatePersonHP(@WebParam(name="personId") int id, @WebParam(name="healthProfile") LifeStatus hp);
+    public int updatePersonHP(@WebParam(name="personId") Long id, @WebParam(name="healthProfile") LifeStatus hp);
     
     @WebMethod(operationName="readPersonHistory")
     @WebResult(name="history") 
-    public List<HealthMeasureHistory> readPersonHistory(@WebParam(name="personId") int id, @WebParam(name="measureType") String measureType);
+    public List<HealthMeasureHistory> readPersonHistory(@WebParam(name="personId") Long id, @WebParam(name="measureType") String measureType);
 
     @WebMethod(operationName="readPersonMeasurement")
     @WebResult(name="singleMeasureOfPersonById") 
-    public HealthMeasureHistory readPersonMeasurement(@WebParam(name="personId") int id, @WebParam(name="measureType") String measureType, @WebParam(name="mId") int idMeasure);
+    public HealthMeasureHistory readPersonMeasurement(@WebParam(name="personId") Long id, @WebParam(name="measureType") String measureType, @WebParam(name="mId") int idMeasure);
 
     @WebMethod(operationName="savePersonMeasurement")
     @WebResult(name="singleMeasureSaved") 
-    public LifeStatus savePersonMeasurement(@WebParam(name="personId") int idPerson, @WebParam(name="measure") Measure m);
+    public LifeStatus savePersonMeasurement(@WebParam(name="personId") Long idPerson, @WebParam(name="measure") Measure m);
     
     @WebMethod(operationName="readMeasureTypes")
     @WebResult(name="ListOfMeasureTypes") 
     public List<MeasureDefinition> readMeasureTypes();
     
+    @WebMethod(operationName="getCompleteMeasureTypeFromName")
+    @WebResult(name="measureDefinition") 
+    public MeasureDefinition getCompleteMeasureTypeFromName(@WebParam(name="typeMeasure") String typeMeasure);
+    
     @WebMethod(operationName="updatePersonMeasure")
     @WebResult(name="singleMeasureUpdated") 
     public HealthMeasureHistory updatePersonMeasure(@WebParam(name="idMeasure") int idMeasure, @WebParam(name="measure") Measure m);
     
-    
+    @WebMethod(operationName="saveMeasureDefinition")
+    @WebResult(name="singleMeasureUpdated") 
+    public MeasureDefinition saveMeasureDefinition(@WebParam(name="measureDefinition") MeasureDefinition measureDefinition);
+   
     @WebMethod(operationName="readPersonMeasureByDates")
     @WebResult(name="ListOfMeasureFromToDateAndType") 
-    public List<HealthMeasureHistory> readPersonMeasureByDates(@WebParam(name="personId") int id, @WebParam(name="measureType") String measureType, @WebParam(name="before") Long before, @WebParam(name="after") Long after);
+    public List<HealthMeasureHistory> readPersonMeasureByDates(@WebParam(name="personId") Long id, @WebParam(name="measureType") String measureType, @WebParam(name="before") Long before, @WebParam(name="after") Long after);
     
     
     @WebMethod(operationName="readPersonListByMeasurementRange")
