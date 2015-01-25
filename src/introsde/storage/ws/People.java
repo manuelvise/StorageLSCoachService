@@ -21,6 +21,10 @@ public interface People {
     @WebMethod(operationName="readPerson")
     @WebResult(name="person") 
     public Person readPerson(@WebParam(name="personId") Long id);
+    
+    @WebMethod(operationName="readRemotePerson")
+    @WebResult(name="remotePerson") 
+    public Person readRemotePerson(@WebParam(name="accessToken") String accessToken);
  
     @WebMethod(operationName="getPersonList")
     @WebResult(name="people") 
@@ -42,10 +46,19 @@ public interface People {
     @WebResult(name="hpId") 
     public int updatePersonHP(@WebParam(name="personId") Long id, @WebParam(name="healthProfile") LifeStatus hp);
     
-    @WebMethod(operationName="readPersonHistory")
-    @WebResult(name="history") 
-    public List<HealthMeasureHistory> readPersonHistory(@WebParam(name="personId") Long id, @WebParam(name="measureType") String measureType);
+    @WebMethod(operationName="readPersonLocalHistory")
+    @WebResult(name="localHistory") 
+    public List<HealthMeasureHistory> readPersonLocalHistory(@WebParam(name="personId") Long id, @WebParam(name="measureType") String measureType);
 
+    @WebMethod(operationName="readPersonRemoteWeightHistory")
+    @WebResult(name="remoteWeightHistory") 
+    public List<HealthMeasureHistory> readPersonRemoteWeightHistory(@WebParam(name="accessToken") String accessToken);
+
+    @WebMethod(operationName="readRemotePersonId")
+    @WebResult(name="RemotePersonId") 
+    public Long readRemotePersonId(@WebParam(name="accessToken") String accessToken);
+
+    
     @WebMethod(operationName="readPersonMeasurement")
     @WebResult(name="singleMeasureOfPersonById") 
     public HealthMeasureHistory readPersonMeasurement(@WebParam(name="personId") Long id, @WebParam(name="measureType") String measureType, @WebParam(name="mId") int idMeasure);

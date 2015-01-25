@@ -46,14 +46,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link HealthMeasureHistory }
-     * 
-     */
-    public HealthMeasureHistory createHealthMeasureHistory() {
-        return new HealthMeasureHistory();
-    }
-
-    /**
      * Create an instance of {@link LifeStatus }
      * 
      */

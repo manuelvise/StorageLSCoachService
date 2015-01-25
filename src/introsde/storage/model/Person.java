@@ -32,7 +32,6 @@ public class Person implements Serializable {
 	private static final long serialVersionUID = -7888564417005646353L;
 
 	@Id
-	@GeneratedValue
 	@Column(name="idPerson")
 	private Long idPerson;
 

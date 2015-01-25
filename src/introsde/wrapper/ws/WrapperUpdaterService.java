@@ -10,7 +10,6 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.ws.Action;
 import javax.xml.ws.RequestWrapper;
 import javax.xml.ws.ResponseWrapper;
-import introsde.storage.ws.HealthMeasureHistory;
 
 
 /**
@@ -21,11 +20,25 @@ import introsde.storage.ws.HealthMeasureHistory;
  */
 @WebService(name = "WrapperUpdaterService", targetNamespace = "http://ws.wrapper.introsde/")
 @XmlSeeAlso({
-    introsde.storage.ws.ObjectFactory.class,
-    introsde.wrapper.ws.ObjectFactory.class
+    ObjectFactory.class
 })
 public interface WrapperUpdaterService {
 
+
+    /**
+     * 
+     * @param accessToken
+     * @return
+     *     returns java.lang.Long
+     */
+    @WebMethod
+    @WebResult(name = "userId", targetNamespace = "")
+    @RequestWrapper(localName = "getUserId", targetNamespace = "http://ws.wrapper.introsde/", className = "introsde.wrapper.ws.GetUserId")
+    @ResponseWrapper(localName = "getUserIdResponse", targetNamespace = "http://ws.wrapper.introsde/", className = "introsde.wrapper.ws.GetUserIdResponse")
+    @Action(input = "http://ws.wrapper.introsde/WrapperUpdaterService/getUserIdRequest", output = "http://ws.wrapper.introsde/WrapperUpdaterService/getUserIdResponse")
+    public Long getUserId(
+        @WebParam(name = "accessToken", targetNamespace = "")
+        String accessToken);
 
     /**
      * 
@@ -46,14 +59,29 @@ public interface WrapperUpdaterService {
      * 
      * @param accessToken
      * @return
-     *     returns java.util.List<introsde.storage.ws.HealthMeasureHistory>
+     *     returns java.util.List<introsde.wrapper.ws.MeasureWeight>
      */
     @WebMethod
     @WebResult(name = "weight", targetNamespace = "")
     @RequestWrapper(localName = "getMeasureHistoryFromWeightRK", targetNamespace = "http://ws.wrapper.introsde/", className = "introsde.wrapper.ws.GetMeasureHistoryFromWeightRK")
     @ResponseWrapper(localName = "getMeasureHistoryFromWeightRKResponse", targetNamespace = "http://ws.wrapper.introsde/", className = "introsde.wrapper.ws.GetMeasureHistoryFromWeightRKResponse")
     @Action(input = "http://ws.wrapper.introsde/WrapperUpdaterService/getMeasureHistoryFromWeightRKRequest", output = "http://ws.wrapper.introsde/WrapperUpdaterService/getMeasureHistoryFromWeightRKResponse")
-    public List<HealthMeasureHistory> getMeasureHistoryFromWeightRK(
+    public List<MeasureWeight> getMeasureHistoryFromWeightRK(
+        @WebParam(name = "accessToken", targetNamespace = "")
+        String accessToken);
+
+    /**
+     * 
+     * @param accessToken
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(name = "PersonJson", targetNamespace = "")
+    @RequestWrapper(localName = "getUser", targetNamespace = "http://ws.wrapper.introsde/", className = "introsde.wrapper.ws.GetUser")
+    @ResponseWrapper(localName = "getUserResponse", targetNamespace = "http://ws.wrapper.introsde/", className = "introsde.wrapper.ws.GetUserResponse")
+    @Action(input = "http://ws.wrapper.introsde/WrapperUpdaterService/getUserRequest", output = "http://ws.wrapper.introsde/WrapperUpdaterService/getUserResponse")
+    public String getUser(
         @WebParam(name = "accessToken", targetNamespace = "")
         String accessToken);
 

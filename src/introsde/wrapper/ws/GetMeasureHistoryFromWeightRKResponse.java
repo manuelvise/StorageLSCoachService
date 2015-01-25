@@ -6,7 +6,6 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
-import introsde.storage.ws.HealthMeasureHistory;
 
 
 /**
@@ -19,7 +18,7 @@ import introsde.storage.ws.HealthMeasureHistory;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="weight" type="{http://ws.storage.introsde/}healthMeasureHistory" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="weight" type="{http://ws.wrapper.introsde/}measureWeight" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -34,7 +33,7 @@ import introsde.storage.ws.HealthMeasureHistory;
 })
 public class GetMeasureHistoryFromWeightRKResponse {
 
-    protected List<HealthMeasureHistory> weight;
+    protected List<MeasureWeight> weight;
 
     /**
      * Gets the value of the weight property.
@@ -54,13 +53,13 @@ public class GetMeasureHistoryFromWeightRKResponse {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link HealthMeasureHistory }
+     * {@link MeasureWeight }
      * 
      * 
      */
-    public List<HealthMeasureHistory> getWeight() {
+    public List<MeasureWeight> getWeight() {
         if (weight == null) {
-            weight = new ArrayList<HealthMeasureHistory>();
+            weight = new ArrayList<MeasureWeight>();
         }
         return this.weight;
     }

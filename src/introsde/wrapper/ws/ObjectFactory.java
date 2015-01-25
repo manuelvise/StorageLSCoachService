@@ -25,9 +25,13 @@ import javax.xml.namespace.QName;
 public class ObjectFactory {
 
     private final static QName _GetFitnessActivitiesResponse_QNAME = new QName("http://ws.wrapper.introsde/", "getFitnessActivitiesResponse");
+    private final static QName _GetUserId_QNAME = new QName("http://ws.wrapper.introsde/", "getUserId");
+    private final static QName _GetUser_QNAME = new QName("http://ws.wrapper.introsde/", "getUser");
     private final static QName _GetMeasureHistoryFromWeightRKResponse_QNAME = new QName("http://ws.wrapper.introsde/", "getMeasureHistoryFromWeightRKResponse");
     private final static QName _GetMeasureHistoryFromWeightRK_QNAME = new QName("http://ws.wrapper.introsde/", "getMeasureHistoryFromWeightRK");
     private final static QName _GetFitnessActivities_QNAME = new QName("http://ws.wrapper.introsde/", "getFitnessActivities");
+    private final static QName _GetUserIdResponse_QNAME = new QName("http://ws.wrapper.introsde/", "getUserIdResponse");
+    private final static QName _GetUserResponse_QNAME = new QName("http://ws.wrapper.introsde/", "getUserResponse");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: introsde.wrapper.ws
@@ -42,6 +46,22 @@ public class ObjectFactory {
      */
     public GetMeasureHistoryFromWeightRKResponse createGetMeasureHistoryFromWeightRKResponse() {
         return new GetMeasureHistoryFromWeightRKResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetUser }
+     * 
+     */
+    public GetUser createGetUser() {
+        return new GetUser();
+    }
+
+    /**
+     * Create an instance of {@link GetUserId }
+     * 
+     */
+    public GetUserId createGetUserId() {
+        return new GetUserId();
     }
 
     /**
@@ -61,11 +81,35 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link GetUserResponse }
+     * 
+     */
+    public GetUserResponse createGetUserResponse() {
+        return new GetUserResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetUserIdResponse }
+     * 
+     */
+    public GetUserIdResponse createGetUserIdResponse() {
+        return new GetUserIdResponse();
+    }
+
+    /**
      * Create an instance of {@link GetFitnessActivities }
      * 
      */
     public GetFitnessActivities createGetFitnessActivities() {
         return new GetFitnessActivities();
+    }
+
+    /**
+     * Create an instance of {@link MeasureWeight }
+     * 
+     */
+    public MeasureWeight createMeasureWeight() {
+        return new MeasureWeight();
     }
 
     /**
@@ -94,6 +138,24 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetUserId }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://ws.wrapper.introsde/", name = "getUserId")
+    public JAXBElement<GetUserId> createGetUserId(GetUserId value) {
+        return new JAXBElement<GetUserId>(_GetUserId_QNAME, GetUserId.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetUser }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://ws.wrapper.introsde/", name = "getUser")
+    public JAXBElement<GetUser> createGetUser(GetUser value) {
+        return new JAXBElement<GetUser>(_GetUser_QNAME, GetUser.class, null, value);
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link GetMeasureHistoryFromWeightRKResponse }{@code >}}
      * 
      */
@@ -118,6 +180,24 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://ws.wrapper.introsde/", name = "getFitnessActivities")
     public JAXBElement<GetFitnessActivities> createGetFitnessActivities(GetFitnessActivities value) {
         return new JAXBElement<GetFitnessActivities>(_GetFitnessActivities_QNAME, GetFitnessActivities.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetUserIdResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://ws.wrapper.introsde/", name = "getUserIdResponse")
+    public JAXBElement<GetUserIdResponse> createGetUserIdResponse(GetUserIdResponse value) {
+        return new JAXBElement<GetUserIdResponse>(_GetUserIdResponse_QNAME, GetUserIdResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetUserResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://ws.wrapper.introsde/", name = "getUserResponse")
+    public JAXBElement<GetUserResponse> createGetUserResponse(GetUserResponse value) {
+        return new JAXBElement<GetUserResponse>(_GetUserResponse_QNAME, GetUserResponse.class, null, value);
     }
 
 }
