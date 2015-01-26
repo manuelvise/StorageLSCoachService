@@ -1,4 +1,5 @@
 package introsde.storage.ws;
+import introsde.storage.model.Goal;
 import introsde.storage.model.HealthMeasureHistory;
 import introsde.storage.model.LifeStatus;
 import introsde.storage.model.Measure;
@@ -91,4 +92,19 @@ public interface People {
     @WebMethod(operationName="readPersonListByMeasurementRange")
     @WebResult(name="ListOfMeasureOnRange") 
     public List<Person> readPersonListByMeasurementRange(@WebParam(name="measureType") String measureType, @WebParam(name="maxValue") String maxValue, @WebParam(name="minValue") String minValue);
+
+
+    @WebMethod(operationName="readPersonGoals")
+    @WebResult(name="Goals") 
+    public List<Goal> readPersonGoals(@WebParam(name="personId") Long id);
+    
+    @WebMethod(operationName="readPersonGoalForMeasureType")
+    @WebResult(name="Goal") 
+    public Goal readPersonGoalForMeasureType(@WebParam(name="personId") Long id, @WebParam(name="measureType") String measureType);
+
+    @WebMethod(operationName="saveGoal")
+    @WebResult(name="Goal") 
+    public Goal addGoal(@WebParam(name="personId") Long id, @WebParam(name="measureType") String measureType, @WebParam(name="value") String value, @WebParam(name="deadline") Long deadline);
+
+    
 }

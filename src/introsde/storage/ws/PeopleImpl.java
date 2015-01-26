@@ -1,6 +1,7 @@
 package introsde.storage.ws;
 
 
+import introsde.storage.model.Goal;
 import introsde.storage.model.HealthMeasureHistory;
 import introsde.storage.model.LifeStatus;
 import introsde.storage.model.Measure;
@@ -220,6 +221,34 @@ public class PeopleImpl implements People {
 		}
 		
 		return personRemote;
+	}
+
+	@Override
+	public List<Goal> readPersonGoals(Long id) {
+		
+		return Goal.getGoalsOfPerson(id);
+		
+	}
+
+	@Override
+	public Goal readPersonGoalForMeasureType(Long id, String measureType) {
+		
+		return Goal.getGoalOfPersonForMeasureType(id, measureType);
+		
+	}
+
+
+	@Override
+	public Goal addGoal(Long id, String measureType, String value, Long deadline) {
+		Goal newGoal = new Goal();
+		newGoal.setDeadline(deadline);
+		newGoal.setMeasureDefinition(MeasureDefinition.getTypeMeasureFromName(measureType));
+		newGoal.setPerson(Person.getPersonById(id));
+		newGoal.setValue(value);
+		
+		Goal.saveGoal(newGoal);
+		
+		return Goal.getGoalOfPersonForMeasureType(id, measureType);
 	}
 	
 	
