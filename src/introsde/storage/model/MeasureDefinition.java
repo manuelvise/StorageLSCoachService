@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name="MeasureDefinition")
 @NamedQueries({
 @NamedQuery(name="MeasureDefinition.findAll", query="SELECT m FROM MeasureDefinition m"),
-@NamedQuery(name="MeasureDefinition.findType", query="SELECT m FROM MeasureDefinition m where measureName = :type")
+@NamedQuery(name="MeasureDefinition.findType", query="SELECT m FROM MeasureDefinition m where m.measureName = :type")
 })
 @XmlRootElement
 public class MeasureDefinition implements Serializable {
@@ -39,8 +39,8 @@ public class MeasureDefinition implements Serializable {
 	@Column(name="measureType")
 	private String measureType;
 
-	@OneToMany(mappedBy="measureDefinition")
-	private List<MeasureDefaultRange> measureDefaultRange;
+//	@OneToMany(mappedBy="measureDefinition")
+//	private List<MeasureDefaultRange> measureDefaultRange;
 
 	public MeasureDefinition() {
 	}
@@ -69,13 +69,13 @@ public class MeasureDefinition implements Serializable {
 		this.measureType = measureType;
 	}
 
-	public List<MeasureDefaultRange> getMeasureDefaultRange() {
-	    return measureDefaultRange;
-	}
-
-	public void setMeasureDefaultRange(List<MeasureDefaultRange> param) {
-	    this.measureDefaultRange = param;
-	}
+//	public List<MeasureDefaultRange> getMeasureDefaultRange() {
+//	    return measureDefaultRange;
+//	}
+//
+//	public void setMeasureDefaultRange(List<MeasureDefaultRange> param) {
+//	    this.measureDefaultRange = param;
+//	}
 
 	// database operations
 	public static MeasureDefinition getMeasureDefinitionById(int idMeasureDef) {
@@ -97,7 +97,11 @@ public class MeasureDefinition implements Serializable {
 		EntityManager em = LifeCoachDao.instance.createEntityManager();
 	    List<MeasureDefinition> list = em.createNamedQuery("MeasureDefinition.findType", MeasureDefinition.class).setParameter("type", type).getResultList();
 	    LifeCoachDao.instance.closeConnections(em);
-	    return list.get(0);
+	    if(list.size()>0){
+	    	return list.get(0);
+	    }else{
+	    	return null;
+	    }
 	    
 	}
 	

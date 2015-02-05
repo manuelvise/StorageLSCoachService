@@ -2,6 +2,7 @@ package introsde.storage.model;
 
 import introsde.storage.dao.LifeCoachDao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -21,7 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "Goal")
 @NamedQueries({
 		@NamedQuery(name = "Goal.getGoalsOfPerson", query = "SELECT m FROM Goal m where m.person = :person"),
-		@NamedQuery(name = "Goal.getGoalsOfPerson", query = "SELECT m FROM Goal m where m.person = :person and m.measureDefinition.measureName = :type") })
+		@NamedQuery(name = "Goal.getGoalsOfPersonForMeasureType", query = "SELECT m FROM Goal m where m.person = :person and m.measureDefinition.measureName = :type") })
 @XmlRootElement
 public class Goal {
 
@@ -84,13 +85,13 @@ public class Goal {
 		this.person = person;
 	}
 
-	public static List<Goal> getGoalsOfPerson(Long idPerson) {
+	public static ArrayList<Goal> getGoalsOfPerson(Long idPerson) {
 
 		Person person = Person.getPersonById(idPerson);
 		EntityManager em = LifeCoachDao.instance.createEntityManager();
-		List<Goal> list = null;
+		ArrayList<Goal> list = null;
 
-		list = em.createNamedQuery("Goal.getGoalsOfPerson", Goal.class)
+		list = (ArrayList<Goal>) em.createNamedQuery("Goal.getGoalsOfPerson", Goal.class)
 				.setParameter("person", person).getResultList();
 		LifeCoachDao.instance.closeConnections(em);
 

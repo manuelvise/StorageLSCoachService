@@ -10,7 +10,9 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,6 +26,7 @@ import java.util.List;
 @NamedQuery(name="Person.findPeopleRange", query="SELECT p FROM Person p, LifeStatus lf where lf.person = p and lf.measureDefinition.measureName = :type and lf.value >= :minValue and lf.value <= :maxValue"),
 @NamedQuery(name="Person.findAll", query="SELECT p FROM Person p")})
 @XmlRootElement
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Person implements Serializable {
 
 	/**
@@ -44,9 +47,8 @@ public class Person implements Serializable {
 	@Column(name="username")
 	private String username;
 	
-	@Temporal(TemporalType.DATE)
 	@Column(name="birthdate")
-	private Date birthdate;
+	private String birthdate;
 	
 	@Column(name="email")
 	private String email;
@@ -58,11 +60,11 @@ public class Person implements Serializable {
 	public Person() {
 	}
 	
-	public Date getBirthdate() {
+	public String getBirthdate() {
 		return this.birthdate;
 	}
 
-	public void setBirthdate(Date birthdate) {
+	public void setBirthdate(String birthdate) {
 		this.birthdate = birthdate;
 	}
 
@@ -139,7 +141,7 @@ public class Person implements Serializable {
 		EntityManager em = LifeCoachDao.instance.createEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
-		em.persist(p);
+		p = em.merge(p);
 		tx.commit();
 	    LifeCoachDao.instance.closeConnections(em);
 	    return p;
