@@ -46,6 +46,7 @@ public class LifeStatus implements Serializable {
 //	@TableGenerator(name="sqlite_lifestatus", table="sqlite_sequence",
 //	    pkColumnName="name", valueColumnName="seq",
 //	    pkColumnValue="LifeStatus")
+	@GeneratedValue
 	@Column(name = "idMeasure")
 	private int idMeasure;
 
@@ -124,6 +125,7 @@ public class LifeStatus implements Serializable {
 		}
 		oldLifeStatus.setMeasureDefinition(p.getMeasureDefinition());
 		oldLifeStatus.setValue(p.getValue());
+		oldLifeStatus.setPerson(p.getPerson());
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		oldLifeStatus = em.merge(oldLifeStatus);

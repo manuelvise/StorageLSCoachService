@@ -50,7 +50,7 @@ public interface People {
     
     @WebMethod(operationName="readPersonLocalHistory")
     @WebResult(name="localHistory") 
-    public ArrayList<HealthMeasureHistory> readPersonLocalHistory(@WebParam(name="personId") Long id, @WebParam(name="measureType") String measureType);
+    public List<HealthMeasureHistory> readPersonLocalHistory(@WebParam(name="personId") Long id, @WebParam(name="measureType") String measureType);
 
     @WebMethod(operationName="readPersonRemoteWeightHistory")
     @WebResult(name="remoteWeightHistory") 
@@ -68,6 +68,11 @@ public interface People {
     @WebMethod(operationName="savePersonMeasurement")
     @WebResult(name="singleMeasureSaved") 
     public LifeStatus savePersonMeasurement(@WebParam(name="personId") Long idPerson, @WebParam(name="measure") Measure m);
+    
+    @WebMethod(operationName="saveIfnotExistPersonMeasurement")
+    @WebResult(name="singleMeasureSaved") 
+    public HealthMeasureHistory saveIfnotExistPersonMeasurement(@WebParam(name="personId") Long idPerson, @WebParam(name="measure") Measure m);
+    
     
     @WebMethod(operationName="readMeasureTypes")
     @WebResult(name="ListOfMeasureTypes") 

@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 		@NamedQuery(name = "HealthMeasureHistory.findAll", query = "SELECT h FROM HealthMeasureHistory h"),
 		@NamedQuery(name = "HealthMeasureHistory.findLifeStatusOfPersonForMeasure", query = "SELECT m FROM HealthMeasureHistory m where m.person = :person and m.measureDefinition.measureName = :type"),
 		@NamedQuery(name = "HealthMeasureHistory.findMeasuresFromTo", query = "SELECT m FROM HealthMeasureHistory m where m.person = :idPerson and m.measureDefinition.measureName = :type and m.timestamp >= :from and m.timestamp <= :to"),
+		@NamedQuery(name = "HealthMeasureHistory.findHealthMeasureForDefinitionAndTimestamp", query = "SELECT m FROM HealthMeasureHistory m where m.person = :idPerson and m.measureDefinition.measureName = :mDef and m.timestamp = :timestamp"),
 		@NamedQuery(name = "HealthMeasureHistory.findLifeStatusOfPersonForidM", query = "SELECT m FROM HealthMeasureHistory m where m.person = :person and m.measureDefinition.measureName = :type and m.idMeasureHistory = :idM") })
 @XmlRootElement
 public class HealthMeasureHistory implements Serializable {
@@ -207,5 +208,25 @@ public class HealthMeasureHistory implements Serializable {
 
 		return measuresFromTo;
 	}
+
+	public static HealthMeasureHistory getHealthMeasureForDefinitionAndTimestamp(Long idPerson, Measure m) {
+		EntityManager em = LifeCoachDao.instance.createEntityManager();
+		
+		List<HealthMeasureHistory> measuresFromTo = em
+				.createNamedQuery("HealthMeasureHistory.findHealthMeasureForDefinitionAndTimestamp",
+						HealthMeasureHistory.class)
+				.setParameter("idPerson", Person.getPersonById(idPerson))
+				.setParameter("mDef",m.getMeasureDefinition().getMeasureName())
+				.setParameter("timestamp", m.getTimestamp()).getResultList();
+		LifeCoachDao.instance.closeConnections(em);
+		
+		if(measuresFromTo.size() < 1)
+			return null;
+		
+		return measuresFromTo.get(0);
+		
+		
+	}
+
 
 }

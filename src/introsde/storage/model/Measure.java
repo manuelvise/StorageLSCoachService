@@ -1,8 +1,19 @@
 package introsde.storage.model;
 
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import introsde.storage.model.MeasureDefinition;
 
-public class Measure {
+
+public class Measure implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5426858282319981486L;
+	
 	private String value;
 	private MeasureDefinition measureDefinition;
 	private String timestamp;
@@ -15,6 +26,7 @@ public class Measure {
 		this.value = value;
 	}
 
+	@XmlElement (name = "mDefinition", type=MeasureDefinition.class)
 	public MeasureDefinition getMeasureDefinition() {
 		return measureDefinition;
 	}

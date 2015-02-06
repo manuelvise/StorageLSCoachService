@@ -94,12 +94,18 @@ public class PeopleImpl implements People {
 	}
 
 	@Override
-	public ArrayList<HealthMeasureHistory> readPersonLocalHistory(Long id,
+	public List<HealthMeasureHistory> readPersonLocalHistory(Long id,
 			String measureType) {
 
-		ArrayList<HealthMeasureHistory> historyForMeasure = (ArrayList<HealthMeasureHistory>) HealthMeasureHistory
-				.getLifeStyleOfPersonForMeasure(id, measureType);
+		List<HealthMeasureHistory> historyForMeasure = null;
 
+		try {
+			historyForMeasure = HealthMeasureHistory
+					.getLifeStyleOfPersonForMeasure(id, measureType);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return historyForMeasure;
 
 	}
@@ -115,7 +121,7 @@ public class PeopleImpl implements People {
 	}
 
 	@Override
-	public LifeStatus savePersonMeasurement(Long idPerson, Measure m,) {
+	public LifeStatus savePersonMeasurement(Long idPerson, Measure m) {
 		LifeStatus lifeStatusMeasureSaved = null;
 
 		LifeStatus lf = new LifeStatus();
@@ -137,6 +143,7 @@ public class PeopleImpl implements People {
 			LifeStatus.removeLifeStatus(lifeStatusMeasureSaved);
 			lifeStatusMeasureSaved = null;
 		}
+
 		return lifeStatusMeasureSaved;
 	}
 
@@ -188,10 +195,11 @@ public class PeopleImpl implements People {
 
 	@Override
 	public String getCompleteMeasureTypeFromName(String typeMeasure) {
-		try{
+		try {
 			ObjectMapper mapperJson = new ObjectMapper();
 			String typeJson = null;
-			MeasureDefinition measureDef = MeasureDefinition.getTypeMeasureFromName(typeMeasure);
+			MeasureDefinition measureDef = MeasureDefinition
+					.getTypeMeasureFromName(typeMeasure);
 			try {
 				typeJson = mapperJson.writeValueAsString(measureDef);
 				return typeJson;
@@ -199,29 +207,27 @@ public class PeopleImpl implements People {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
-	
-		}catch (Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
 	@Override
-	public MeasureDefinition saveMeasureDefinition(
-			String measureDefinition) {
-		
+	public MeasureDefinition saveMeasureDefinition(String measureDefinition) {
+
 		MeasureDefinition meDefToSave = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 
-			meDefToSave = mapper.readValue(measureDefinition, MeasureDefinition.class);
+			meDefToSave = mapper.readValue(measureDefinition,
+					MeasureDefinition.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return MeasureDefinition.saveMeasureDefinition(meDefToSave);
 	}
 
@@ -300,6 +306,41 @@ public class PeopleImpl implements People {
 		Goal.saveGoal(newGoal);
 
 		return Goal.getGoalOfPersonForMeasureType(id, measureType);
+	}
+
+	@Override
+	public HealthMeasureHistory saveIfnotExistPersonMeasurement(Long idPerson,
+			Measure m) {
+		LifeStatus lifeStatusMeasureSaved = null;
+
+		LifeStatus lf = new LifeStatus();
+		lf.setMeasureDefinition(m.getMeasureDefinition());
+		lf.setValue(m.getValue());
+		Person p = Person.getPersonById(idPerson);
+		lf.setPerson(p);
+		lifeStatusMeasureSaved = LifeStatus.saveLifeStatus(lf);
+
+		HealthMeasureHistory hmHistory = HealthMeasureHistory
+				.getHealthMeasureForDefinitionAndTimestamp(idPerson, m);
+
+		if (hmHistory == null) {
+			hmHistory = new HealthMeasureHistory();
+			hmHistory.setPerson(p);
+			hmHistory.setTimestamp(m.getTimestamp());
+			hmHistory.setMeasureDefinition(m.getMeasureDefinition());
+			hmHistory.setValue(m.getValue());
+			HealthMeasureHistory newMeasurHistory = HealthMeasureHistory
+					.saveHealthMeasureHistory(hmHistory);
+
+			return newMeasurHistory;
+		} else {
+			HealthMeasureHistory newMeasurHistory = HealthMeasureHistory
+					.updateHealthMeasureHistory(hmHistory);
+		
+			return newMeasurHistory;
+		}
+
+		
 	}
 
 }
