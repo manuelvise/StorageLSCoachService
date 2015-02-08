@@ -44,14 +44,14 @@ public interface WrapperUpdaterService {
      * 
      * @param accessToken
      * @return
-     *     returns introsde.wrapper.ws.Activities
+     *     returns java.util.List<introsde.wrapper.ws.MeasureActivity>
      */
     @WebMethod
     @WebResult(name = "fitnessActivities", targetNamespace = "")
     @RequestWrapper(localName = "getFitnessActivities", targetNamespace = "http://ws.wrapper.introsde/", className = "introsde.wrapper.ws.GetFitnessActivities")
     @ResponseWrapper(localName = "getFitnessActivitiesResponse", targetNamespace = "http://ws.wrapper.introsde/", className = "introsde.wrapper.ws.GetFitnessActivitiesResponse")
     @Action(input = "http://ws.wrapper.introsde/WrapperUpdaterService/getFitnessActivitiesRequest", output = "http://ws.wrapper.introsde/WrapperUpdaterService/getFitnessActivitiesResponse")
-    public Activities getFitnessActivities(
+    public List<MeasureActivity> getFitnessActivities(
         @WebParam(name = "accessToken", targetNamespace = "")
         String accessToken);
 

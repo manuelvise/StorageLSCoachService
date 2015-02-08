@@ -30,7 +30,7 @@ public interface People {
  
     @WebMethod(operationName="getPersonList")
     @WebResult(name="people") 
-    public ArrayList<Person> getPeople();
+    public List<Person> getPeople();
  
     @WebMethod(operationName="createPerson")
     @WebResult(name="personId") 
@@ -54,7 +54,7 @@ public interface People {
 
     @WebMethod(operationName="readPersonRemoteWeightHistory")
     @WebResult(name="remoteWeightHistory") 
-    public ArrayList<HealthMeasureHistory> readPersonRemoteWeightHistory(@WebParam(name="accessToken") String accessToken);
+    public List<HealthMeasureHistory> readPersonRemoteWeightHistory(@WebParam(name="accessToken") String accessToken);
 
     @WebMethod(operationName="readRemotePersonId")
     @WebResult(name="RemotePersonId") 
@@ -92,17 +92,17 @@ public interface People {
    
     @WebMethod(operationName="readPersonMeasureByDates")
     @WebResult(name="ListOfMeasureFromToDateAndType") 
-    public ArrayList<HealthMeasureHistory> readPersonMeasureByDates(@WebParam(name="personId") Long id, @WebParam(name="measureType") String measureType, @WebParam(name="before") Long before, @WebParam(name="after") Long after);
+    public List<HealthMeasureHistory> readPersonMeasureByDates(@WebParam(name="personId") Long id, @WebParam(name="measureType") String measureType, @WebParam(name="before") Long before, @WebParam(name="after") Long after);
     
     
     @WebMethod(operationName="readPersonListByMeasurementRange")
     @WebResult(name="ListOfMeasureOnRange") 
-    public ArrayList<Person> readPersonListByMeasurementRange(@WebParam(name="measureType") String measureType, @WebParam(name="maxValue") String maxValue, @WebParam(name="minValue") String minValue);
+    public List<Person> readPersonListByMeasurementRange(@WebParam(name="measureType") String measureType, @WebParam(name="maxValue") String maxValue, @WebParam(name="minValue") String minValue);
 
 
     @WebMethod(operationName="readPersonGoals")
     @WebResult(name="Goals") 
-    public ArrayList<Goal> readPersonGoals(@WebParam(name="personId") Long id);
+    public List<Goal> readPersonGoals(@WebParam(name="personId") Long id);
     
     @WebMethod(operationName="readPersonGoalForMeasureType")
     @WebResult(name="Goal") 
@@ -111,6 +111,10 @@ public interface People {
     @WebMethod(operationName="saveGoal")
     @WebResult(name="Goal") 
     public Goal addGoal(@WebParam(name="personId") Long id, @WebParam(name="measureType") String measureType, @WebParam(name="value") String value, @WebParam(name="deadline") Long deadline);
+
+    @WebMethod(operationName="readPersonRemoteActivityHistory")
+    @WebResult(name="ListOfActivities") 
+	ArrayList<HealthMeasureHistory> readPersonRemoteActivityHistory(@WebParam(name="accessToken") String accessToken);
 
     
 }

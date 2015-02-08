@@ -9,12 +9,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.NoResultException;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -22,6 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "Goal")
 @NamedQueries({
 		@NamedQuery(name = "Goal.getGoalsOfPerson", query = "SELECT m FROM Goal m where m.person = :person"),
+		@NamedQuery(name = "Goal.getGoalsOfPersonDeadlineType", query = "SELECT m FROM Goal m where m.person = :person and m.deadline = :deadline and m.measureDefinition.measureName = :type"),
 		@NamedQuery(name = "Goal.getGoalsOfPersonForMeasureType", query = "SELECT m FROM Goal m where m.person = :person and m.measureDefinition.measureName = :type") })
 @XmlRootElement
 public class Goal {
@@ -31,7 +34,7 @@ public class Goal {
 	@Column(name = "idGoal")
 	private int idGoal;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "idMeasureDef", referencedColumnName = "idMeasureDef")
 	private MeasureDefinition measureDefinition;
 
@@ -85,15 +88,25 @@ public class Goal {
 		this.person = person;
 	}
 
-	public static ArrayList<Goal> getGoalsOfPerson(Long idPerson) {
+	public static List<Goal> getGoalsOfPerson(Long idPerson) {
 
 		Person person = Person.getPersonById(idPerson);
 		EntityManager em = LifeCoachDao.instance.createEntityManager();
-		ArrayList<Goal> list = null;
+		List<Goal> list = null;
 
-		list = (ArrayList<Goal>) em.createNamedQuery("Goal.getGoalsOfPerson", Goal.class)
-				.setParameter("person", person).getResultList();
-		LifeCoachDao.instance.closeConnections(em);
+		try {
+			list = em
+					.createNamedQuery("Goal.getGoalsOfPerson", Goal.class)
+					.setParameter("person", person).getResultList();
+			LifeCoachDao.instance.closeConnections(em);
+
+		} catch (NoResultException e) {
+			return null;
+		}
+
+		if (list == null) {
+			return null;
+		}
 
 		return list;
 
@@ -118,14 +131,35 @@ public class Goal {
 	}
 
 	public static void saveGoal(Goal newGoal) {
-		
+
 		EntityManager em = LifeCoachDao.instance.createEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
-		em.persist(newGoal);
+		newGoal = em.merge(newGoal);
 		tx.commit();
-	    LifeCoachDao.instance.closeConnections(em);
-	    
+		LifeCoachDao.instance.closeConnections(em);
+
+	}
+
+	public static Goal getGoalForPersonDeadlineType(Long id, Long deadline,
+			String measureType) {
+		Person person = Person.getPersonById(id);
+		EntityManager em = LifeCoachDao.instance.createEntityManager();
+		List<Goal> listGoal = null;
+
+		listGoal = em
+				.createNamedQuery("Goal.getGoalsOfPersonDeadlineType",
+						Goal.class).setParameter("person", person)
+				.setParameter("deadline", deadline)
+				.setParameter("type", measureType).getResultList();
+		LifeCoachDao.instance.closeConnections(em);
+
+		if (listGoal != null) {
+			return listGoal.get(0);
+		} else {
+			return null;
+		}
+
 	}
 
 }

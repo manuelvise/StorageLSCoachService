@@ -113,19 +113,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ItemActivity }
+     * Create an instance of {@link MeasureActivity }
      * 
      */
-    public ItemActivity createItemActivity() {
-        return new ItemActivity();
-    }
-
-    /**
-     * Create an instance of {@link Activities }
-     * 
-     */
-    public Activities createActivities() {
-        return new Activities();
+    public MeasureActivity createMeasureActivity() {
+        return new MeasureActivity();
     }
 
     /**

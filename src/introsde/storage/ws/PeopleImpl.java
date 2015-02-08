@@ -6,6 +6,7 @@ import introsde.storage.model.LifeStatus;
 import introsde.storage.model.Measure;
 import introsde.storage.model.MeasureDefinition;
 import introsde.storage.model.Person;
+import introsde.wrapper.ws.MeasureActivity;
 import introsde.wrapper.ws.MeasureWeight;
 import introsde.wrapper.ws.WrapperUpdaterService;
 import introsde.wrapper.ws.WrapperUpdaterService_Service;
@@ -45,8 +46,35 @@ public class PeopleImpl implements People {
 	}
 
 	@Override
-	public ArrayList<Person> getPeople() {
-		return (ArrayList<Person>) Person.getAll();
+	public List<Person> getPeople() {
+
+		List<Person> people = Person.getAll();
+		if (people.size() > 0) {
+			if (people.get(0).getLifeStatus().size() < 1) {
+				for (int i = 0; i < people.size(); i++) {
+					List<LifeStatus> lifestatus = LifeStatus
+							.getLifeStyleOfPerson(people.get(i).getIdPerson());
+
+					if (lifestatus.size() > 0) {
+						people.get(i).setLifeStatus(lifestatus);
+					}
+				}
+
+			}
+			if (people.get(0).getGoals().size() < 1) {
+				for (int i = 0; i < people.size(); i++) {
+					List<Goal> goals = Goal.getGoalsOfPerson(people.get(i)
+							.getIdPerson());
+
+					if (goals.size() > 0) {
+						people.get(i).setGoals(goals);
+					}
+				}
+
+			}
+		}
+
+		return people;
 	}
 
 	@Override
@@ -100,9 +128,16 @@ public class PeopleImpl implements People {
 		List<HealthMeasureHistory> historyForMeasure = null;
 
 		try {
-			historyForMeasure = HealthMeasureHistory
-					.getLifeStyleOfPersonForMeasure(id, measureType);
 
+			if (measureType.equals("activity")) {
+				historyForMeasure = HealthMeasureHistory
+						.getActivitiesOfPerson(id);
+			} else {
+
+				historyForMeasure = HealthMeasureHistory
+						.getLifeStyleOfPersonForMeasure(id, measureType);
+
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -254,6 +289,63 @@ public class PeopleImpl implements People {
 	}
 
 	@Override
+	public ArrayList<HealthMeasureHistory> readPersonRemoteActivityHistory(
+			String accessToken) {
+		WrapperUpdaterService_Service wrapperUpdaterService = new WrapperUpdaterService_Service();
+		wrapperUpdater = wrapperUpdaterService
+				.getWrapperUpdaterServiceImplPort();
+
+		ArrayList<MeasureActivity> wrapperMeasures = (ArrayList<MeasureActivity>) wrapperUpdater
+				.getFitnessActivities(accessToken);
+		ArrayList<HealthMeasureHistory> historyWeight = new ArrayList<HealthMeasureHistory>();
+
+		for (MeasureActivity measureWrapper : wrapperMeasures) {
+			HealthMeasureHistory measureActivity = new HealthMeasureHistory();
+			measureActivity.setTimestamp(measureWrapper.getTimestamp());
+			measureActivity.setValue(measureWrapper.getValue());
+			String measureDefJson = getCompleteMeasureTypeFromName(measureWrapper
+					.getType());
+			if (measureDefJson != null) {
+				MeasureDefinition meDefToSave = null;
+
+				try {
+					ObjectMapper mapper = new ObjectMapper();
+
+					meDefToSave = mapper.readValue(measureDefJson,
+							MeasureDefinition.class);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				measureActivity.setMeasureDefinition(meDefToSave);
+			} else {
+
+				ObjectMapper mapperJson = new ObjectMapper();
+				String typeJson = null;
+				MeasureDefinition measureDef = new MeasureDefinition();
+				measureDef.setMeasureName(measureWrapper.getType());
+				measureDef.setMeasureType("String");
+				try {
+					typeJson = mapperJson.writeValueAsString(measureDef);
+					MeasureDefinition measureSaved = saveMeasureDefinition(typeJson);
+
+					measureActivity.setMeasureDefinition(measureSaved);
+
+				} catch (JsonProcessingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+
+			historyWeight.add(measureActivity);
+		}
+
+		return historyWeight;
+	}
+
+	@Override
 	public Long readRemotePersonId(String accessToken) {
 		WrapperUpdaterService_Service wrapperUpdaterService = new WrapperUpdaterService_Service();
 		wrapperUpdater = wrapperUpdaterService
@@ -281,7 +373,7 @@ public class PeopleImpl implements People {
 	}
 
 	@Override
-	public ArrayList<Goal> readPersonGoals(Long id) {
+	public List<Goal> readPersonGoals(Long id) {
 
 		return Goal.getGoalsOfPerson(id);
 
@@ -302,6 +394,30 @@ public class PeopleImpl implements People {
 				.getTypeMeasureFromName(measureType));
 		newGoal.setPerson(Person.getPersonById(id));
 		newGoal.setValue(value);
+
+		Goal goalStored = Goal.getGoalForPersonDeadlineType(id, deadline,
+				measureType);
+
+		if (goalStored == null) {
+			goalStored = new Goal();
+
+			MeasureDefinition mDef = MeasureDefinition
+					.getTypeMeasureFromName(measureType);
+
+			if (mDef == null) {
+				mDef = new MeasureDefinition();
+				mDef.setMeasureName(measureType);
+				mDef.setMeasureType("String");
+				mDef = MeasureDefinition.saveMeasureDefinition(mDef);
+			}
+
+			goalStored.setMeasureDefinition(mDef);
+
+			goalStored.setPerson(Person.getPersonById(id));
+		}
+
+		goalStored.setDeadline(deadline);
+		goalStored.setValue(value);
 
 		Goal.saveGoal(newGoal);
 
@@ -336,11 +452,10 @@ public class PeopleImpl implements People {
 		} else {
 			HealthMeasureHistory newMeasurHistory = HealthMeasureHistory
 					.updateHealthMeasureHistory(hmHistory);
-		
+
 			return newMeasurHistory;
 		}
 
-		
 	}
 
 }

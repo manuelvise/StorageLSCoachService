@@ -15,6 +15,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -37,6 +38,7 @@ import javax.persistence.OneToOne;
 @NamedQueries({
 @NamedQuery(name = "LifeStatus.findAll", query = "SELECT l FROM LifeStatus l"),
 @NamedQuery(name = "LifeStatus.findLifeStatusOfPersonForMeasure", query = "SELECT m FROM LifeStatus m where m.person = :person and m.measureDefinition = :type"),
+@NamedQuery(name = "LifeStatus.findLifeStatusOfPerson", query = "SELECT m FROM LifeStatus m where m.person = :person"),
 @NamedQuery(name = "LifeStatus.findLifeStatusOfPersonForidM", query = "SELECT m FROM LifeStatus m where m.person = :person and m.measureDefinition = :type and m.idMeasure = :idM")})
 @XmlRootElement(name="Measure")
 public class LifeStatus implements Serializable {
@@ -57,7 +59,7 @@ public class LifeStatus implements Serializable {
 	@JoinColumn(name = "idMeasureDef", referencedColumnName = "idMeasureDef", insertable = true, updatable = true)
 	private MeasureDefinition measureDefinition;
 	
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="idPerson",referencedColumnName="idPerson")
 	private Person person;
 	
@@ -176,4 +178,26 @@ public class LifeStatus implements Serializable {
 	}
 	
 
+	public static List<LifeStatus> getLifeStyleOfPerson(Long idPerson) {
+
+		Person person = Person.getPersonById(idPerson);
+		EntityManager em = LifeCoachDao.instance.createEntityManager();
+		List<LifeStatus> status = null;
+		try{
+		status = em
+				.createNamedQuery("LifeStatus.findLifeStatusOfPerson",
+						LifeStatus.class).setParameter("person", person)
+				.getResultList();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		LifeCoachDao.instance.closeConnections(em);
+		
+		if(status.size()<1){
+			return null;
+		}else{
+			return status;
+		}
+		
+	}
 }
