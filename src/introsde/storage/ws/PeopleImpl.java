@@ -54,8 +54,15 @@ public class PeopleImpl implements People {
 				for (int i = 0; i < people.size(); i++) {
 					List<LifeStatus> lifestatus = LifeStatus
 							.getLifeStyleOfPerson(people.get(i).getIdPerson());
+					
+					
 
 					if (lifestatus.size() > 0) {
+						
+						for (LifeStatus lf : lifestatus) {
+							lf.setPerson(null);
+						}
+						
 						people.get(i).setLifeStatus(lifestatus);
 					}
 				}
@@ -65,8 +72,14 @@ public class PeopleImpl implements People {
 				for (int i = 0; i < people.size(); i++) {
 					List<Goal> goals = Goal.getGoalsOfPerson(people.get(i)
 							.getIdPerson());
+					
+					
 
-					if (goals.size() > 0) {
+					if (goals != null) {
+						for (Goal gl : goals) {
+							gl.setPerson(null);
+						}
+						
 						people.get(i).setGoals(goals);
 					}
 				}
@@ -419,9 +432,9 @@ public class PeopleImpl implements People {
 		goalStored.setDeadline(deadline);
 		goalStored.setValue(value);
 
-		Goal.saveGoal(newGoal);
+		Goal goalSaved = Goal.saveGoal(newGoal);
 
-		return Goal.getGoalOfPersonForMeasureType(id, measureType);
+		return goalSaved;
 	}
 
 	@Override

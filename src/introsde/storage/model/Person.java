@@ -27,8 +27,8 @@ import java.util.List;
 @NamedQueries({
 		@NamedQuery(name = "Person.findPeopleRange", query = "SELECT p FROM Person p, LifeStatus lf where lf.person = p and lf.measureDefinition.measureName = :type and lf.value >= :minValue and lf.value <= :maxValue"),
 		@NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p") })
-@XmlRootElement(name="people")
-@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlRootElement(name="people")
+//@XmlAccessorType(XmlAccessType.FIELD)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Person implements Serializable {
 
@@ -59,15 +59,15 @@ public class Person implements Serializable {
 	// mappedBy must be equal to the name of the attribute in LifeStatus that
 	// maps this relation
 	@OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
-	@XmlElement(name="measure", type=LifeStatus.class)
-	@XmlElementWrapper(name = "Measurements")
+//	@XmlElement(name="measure", type=LifeStatus.class)
+//	@XmlElementWrapper(name = "Measurements")
 	private List<LifeStatus> lifeStatus;
 
 	// mappedBy must be equal to the name of the attribute in LifeStatus that
 	// maps this relation
 	@OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
-	@XmlElement(name="goal", type=Goal.class)
-	@XmlElementWrapper(name = "Goals")
+//	@XmlElement(name="goal", type=Goal.class)
+//	@XmlElementWrapper(name = "Goals")
 	private List<Goal> goals;
 
 	public Person() {

@@ -19,6 +19,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.NoResultException;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "Goal")
@@ -26,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 		@NamedQuery(name = "Goal.getGoalsOfPerson", query = "SELECT m FROM Goal m where m.person = :person"),
 		@NamedQuery(name = "Goal.getGoalsOfPersonDeadlineType", query = "SELECT m FROM Goal m where m.person = :person and m.deadline = :deadline and m.measureDefinition.measureName = :type"),
 		@NamedQuery(name = "Goal.getGoalsOfPersonForMeasureType", query = "SELECT m FROM Goal m where m.person = :person and m.measureDefinition.measureName = :type") })
-@XmlRootElement
+//@XmlRootElement
 public class Goal {
 
 	@Id
@@ -80,6 +81,7 @@ public class Goal {
 		this.deadline = deadline;
 	}
 
+	@XmlTransient
 	public Person getPerson() {
 		return person;
 	}
@@ -104,7 +106,7 @@ public class Goal {
 			return null;
 		}
 
-		if (list == null) {
+		if (list.size()<1) {
 			return null;
 		}
 
@@ -130,7 +132,7 @@ public class Goal {
 		}
 	}
 
-	public static void saveGoal(Goal newGoal) {
+	public static Goal saveGoal(Goal newGoal) {
 
 		EntityManager em = LifeCoachDao.instance.createEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -139,6 +141,7 @@ public class Goal {
 		tx.commit();
 		LifeCoachDao.instance.closeConnections(em);
 
+		return newGoal;
 	}
 
 	public static Goal getGoalForPersonDeadlineType(Long id, Long deadline,
@@ -154,7 +157,7 @@ public class Goal {
 				.setParameter("type", measureType).getResultList();
 		LifeCoachDao.instance.closeConnections(em);
 
-		if (listGoal != null) {
+		if (listGoal.size()>0) {
 			return listGoal.get(0);
 		} else {
 			return null;

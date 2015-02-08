@@ -40,7 +40,7 @@ import javax.persistence.OneToOne;
 @NamedQuery(name = "LifeStatus.findLifeStatusOfPersonForMeasure", query = "SELECT m FROM LifeStatus m where m.person = :person and m.measureDefinition = :type"),
 @NamedQuery(name = "LifeStatus.findLifeStatusOfPerson", query = "SELECT m FROM LifeStatus m where m.person = :person"),
 @NamedQuery(name = "LifeStatus.findLifeStatusOfPersonForidM", query = "SELECT m FROM LifeStatus m where m.person = :person and m.measureDefinition = :type and m.idMeasure = :idM")})
-@XmlRootElement(name="Measure")
+//@XmlRootElement(name="Measure")
 public class LifeStatus implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -170,10 +170,12 @@ public class LifeStatus implements Serializable {
 						LifeStatus.class).setParameter("person", person)
 				.setParameter("type", type)
 				.getSingleResult();
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
 		LifeCoachDao.instance.closeConnections(em);
+		}catch (NoResultException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
 		return status;
 	}
 	

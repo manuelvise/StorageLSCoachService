@@ -21,7 +21,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQuery(name="MeasureDefinition.findAll", query="SELECT m FROM MeasureDefinition m"),
 @NamedQuery(name="MeasureDefinition.findType", query="SELECT m FROM MeasureDefinition m where m.measureName = :type")
 })
-@XmlRootElement
 public class MeasureDefinition implements Serializable {
 	private static final long serialVersionUID = 1L;
 
