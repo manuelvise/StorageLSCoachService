@@ -54,15 +54,13 @@ public class PeopleImpl implements People {
 				for (int i = 0; i < people.size(); i++) {
 					List<LifeStatus> lifestatus = LifeStatus
 							.getLifeStyleOfPerson(people.get(i).getIdPerson());
-					
-					
 
 					if (lifestatus.size() > 0) {
-						
+
 						for (LifeStatus lf : lifestatus) {
 							lf.setPerson(null);
 						}
-						
+
 						people.get(i).setLifeStatus(lifestatus);
 					}
 				}
@@ -72,14 +70,12 @@ public class PeopleImpl implements People {
 				for (int i = 0; i < people.size(); i++) {
 					List<Goal> goals = Goal.getGoalsOfPerson(people.get(i)
 							.getIdPerson());
-					
-					
 
 					if (goals != null) {
 						for (Goal gl : goals) {
 							gl.setPerson(null);
 						}
-						
+
 						people.get(i).setGoals(goals);
 					}
 				}
@@ -318,7 +314,7 @@ public class PeopleImpl implements People {
 			measureActivity.setValue(measureWrapper.getValue());
 			String measureDefJson = getCompleteMeasureTypeFromName(measureWrapper
 					.getType());
-			if (measureDefJson != null) {
+			if (!measureDefJson.equals("null")) {
 				MeasureDefinition meDefToSave = null;
 
 				try {
@@ -441,13 +437,34 @@ public class PeopleImpl implements People {
 	public HealthMeasureHistory saveIfnotExistPersonMeasurement(Long idPerson,
 			Measure m) {
 		LifeStatus lifeStatusMeasureSaved = null;
-
-		LifeStatus lf = new LifeStatus();
-		lf.setMeasureDefinition(m.getMeasureDefinition());
-		lf.setValue(m.getValue());
 		Person p = Person.getPersonById(idPerson);
-		lf.setPerson(p);
-		lifeStatusMeasureSaved = LifeStatus.saveLifeStatus(lf);
+
+		if (m.getMeasureDefinition().getMeasureName().equals("weight")) {
+			LifeStatus lf = new LifeStatus();
+			lf.setMeasureDefinition(m.getMeasureDefinition());
+			lf.setValue(m.getValue());
+
+			lf.setPerson(p);
+			lifeStatusMeasureSaved = LifeStatus.saveLifeStatus(lf);
+		} else {
+
+			LifeStatus lfStored = LifeStatus.getLifeStyleOfPersonForMeasure(
+					idPerson, m.getMeasureDefinition());
+
+			if (lfStored == null) {
+				lfStored = new LifeStatus();
+				lfStored.setMeasureDefinition(m.getMeasureDefinition());
+				lfStored.setPerson(p);
+				lfStored.setValue(m.getValue());
+				lifeStatusMeasureSaved = LifeStatus.saveLifeStatus(lfStored);
+			} else {
+				Double newLifestatus = Double.parseDouble(lfStored.getValue())
+						+ (Double.parseDouble(m.getValue()));
+				lfStored.setValue(String.valueOf(newLifestatus));
+				lifeStatusMeasureSaved = LifeStatus.saveLifeStatus(lfStored);
+			}
+
+		}
 
 		HealthMeasureHistory hmHistory = HealthMeasureHistory
 				.getHealthMeasureForDefinitionAndTimestamp(idPerson, m);
@@ -469,6 +486,46 @@ public class PeopleImpl implements People {
 			return newMeasurHistory;
 		}
 
+	}
+
+	@Override
+	public Boolean deletePersonMeasurementActivities(Long idPerson) {
+
+		List<HealthMeasureHistory> listHistory = HealthMeasureHistory
+				.getActivitiesOfPerson(idPerson);
+
+		try {
+			for (HealthMeasureHistory healthMeasureHistory : listHistory) {
+				if (!healthMeasureHistory.getMeasureDefinition().getMeasureName().equals("weight")) {
+					HealthMeasureHistory
+							.removeHealthMeasureHistory(healthMeasureHistory);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+
+	}
+
+	@Override
+	public Boolean deletePersonLifeStatusActivities(Long idPerson) {
+		List<LifeStatus> listLS = LifeStatus.getLifeStyleOfPerson(idPerson);
+
+		try {
+			for (LifeStatus ls : listLS) {
+				if (!ls.getMeasureDefinition().getMeasureName().equals("weight")) {
+					LifeStatus.removeLifeStatus(ls);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
 	}
 
 }

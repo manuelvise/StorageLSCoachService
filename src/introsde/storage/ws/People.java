@@ -73,6 +73,14 @@ public interface People {
     @WebResult(name="singleMeasureSaved") 
     public HealthMeasureHistory saveIfnotExistPersonMeasurement(@WebParam(name="personId") Long idPerson, @WebParam(name="measure") Measure m);
     
+    @WebMethod(operationName="deletePersonMeasurementActivities")
+    @WebResult(name="boolean") 
+    public Boolean deletePersonMeasurementActivities(@WebParam(name="personId") Long idPerson);
+
+    @WebMethod(operationName="deletePersonLifeStatusActivities")
+    @WebResult(name="boolean") 
+    public Boolean deletePersonLifeStatusActivities(@WebParam(name="personId") Long idPerson);
+    
     
     @WebMethod(operationName="readMeasureTypes")
     @WebResult(name="ListOfMeasureTypes") 
